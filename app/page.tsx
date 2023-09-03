@@ -1,7 +1,11 @@
+import UserAvatar from '@/components/user-avatar'
+
 export default function Home() {
   return (
-    <div className="h-full bg-rose-200">
-      <p className="text-3xl font-bold text-red-800">Hello</p>
-    </div>
+    <main className="flex h-full items-center justify-center bg-purple-200">
+      <div className="fixed right-10 top-10">
+        <UserAvatar />
+      </div>
+    </main>
   )
 }

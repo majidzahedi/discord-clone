@@ -1,10 +1,11 @@
-import { useLocale } from 'next-intl'
+import { NextIntlClientProvider } from 'next-intl'
 import { notFound } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
 import '../globals.css'
 import { Rubik, Noto_Sans_Arabic } from 'next/font/google'
 import { getTranslator } from 'next-intl/server'
+import Provider from '@/components/providers/session-provider'
 
 interface MetadataRootLayout {
   params: {
@@ -32,17 +33,24 @@ export async function generateMetadata({
   }
 }
 
-export default function RootLayout({ children, params }: LocaleLayoutProps) {
-  const locale = useLocale()
-
-  if (params.locale !== locale) {
+export default async function RootLayout({
+  children,
+  params,
+}: LocaleLayoutProps) {
+  let messages
+  const { locale } = params
+  try {
+    messages = (await import(`../../messages/${locale}.json`)).default
+  } catch (error) {
     notFound()
   }
 
   return (
     <html lang={locale} dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <body className={cn(locale === 'fa' ? noto.className : rubic.className)}>
-        {children}
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <Provider>{children}</Provider>
+        </NextIntlClientProvider>
       </body>
     </html>
   )

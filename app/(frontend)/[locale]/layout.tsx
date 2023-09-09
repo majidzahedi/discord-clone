@@ -6,6 +6,8 @@ import '@/styles/globals.css'
 import { Rubik, Noto_Sans_Arabic } from 'next/font/google'
 import { getTranslator } from 'next-intl/server'
 import Provider from '@/components/providers/session-provider'
+import Sidebar from '@/components/sidebar'
+import { ThemeProvider } from '@/components/providers/theme-provider'
 
 interface MetadataRootLayout {
   params: {
@@ -46,10 +48,21 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang={locale} dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <html
+      lang={locale}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+      suppressHydrationWarning
+    >
       <body className={cn(locale === 'fa' ? noto.className : rubic.className)}>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <Provider>{children}</Provider>
+          <Provider>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+              <main className="relative flex h-full flex-1">
+                <Sidebar />
+                {children}
+              </main>
+            </ThemeProvider>
+          </Provider>
         </NextIntlClientProvider>
       </body>
     </html>

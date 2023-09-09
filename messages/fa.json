@@ -3,7 +3,18 @@
     "user-avatar": {
       "login": "ورود",
       "profile": "اکانت",
-      "logOut": "خروج"
+      "logOut": "خروج",
+      "themes": {
+        "default": "تم",
+        "light": "روشن",
+        "dark": "تاریک",
+        "system": "سیستم"
+      },
+      "languages": {
+        "default": "زبان",
+        "persian": "فارسی",
+        "english": "انگلیسی"
+      }
     }
   },
   "Pages": {

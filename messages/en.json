@@ -3,7 +3,18 @@
     "user-avatar": {
       "login": "Login",
       "profile": "Profile",
-      "logOut": "Log Out"
+      "logOut": "Log Out",
+      "themes": {
+        "default": "Themes",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      },
+      "languages": {
+        "default": "Languages",
+        "persian": "Persian",
+        "english": "English"
+      }
     }
   },
   "Pages": {

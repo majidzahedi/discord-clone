@@ -9,4 +9,7 @@ export const authOptions: AuthOptions = {
       clientSecret: process.env.GITHUB_SECRET ?? 'secretId',
     }),
   ],
+  pages: {
+    signIn: '/login',
+  },
 }

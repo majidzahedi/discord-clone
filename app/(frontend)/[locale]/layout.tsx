@@ -2,7 +2,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { notFound } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
-import '../globals.css'
+import '@/styles/globals.css'
 import { Rubik, Noto_Sans_Arabic } from 'next/font/google'
 import { getTranslator } from 'next-intl/server'
 import Provider from '@/components/providers/session-provider'
@@ -26,10 +26,10 @@ const noto = Noto_Sans_Arabic({ subsets: ['arabic'] })
 export async function generateMetadata({
   params: { locale },
 }: MetadataRootLayout) {
-  const t = await getTranslator(locale, 'RootLayout')
+  const t = await getTranslator(locale, 'Pages.main.meta')
 
   return {
-    title: t('sitename'),
+    title: t('siteName'),
   }
 }
 
@@ -40,7 +40,7 @@ export default async function RootLayout({
   let messages
   const { locale } = params
   try {
-    messages = (await import(`../../messages/${locale}.json`)).default
+    messages = (await import(`@/messages/${locale}.json`)).default
   } catch (error) {
     notFound()
   }

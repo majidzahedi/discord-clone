@@ -3,7 +3,7 @@ import { useTranslations } from 'next-intl'
 import UserAvatar from '@/components/user-avatar'
 
 export default function Index() {
-  const t = useTranslations('Index')
+  const t = useTranslations('Pages.main')
   return (
     <div className="flex h-full flex-col items-center justify-center gap-y-5 bg-gradient-to-tr from-blue-200 to-purple-200 text-gray-900">
       <div className="fixed left-5 top-5">

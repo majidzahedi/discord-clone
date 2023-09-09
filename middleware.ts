@@ -4,7 +4,6 @@ import createIntlMiddleware from 'next-intl/middleware'
 
 const locales = ['fa', 'en']
 const publicPages = [
-  '/',
   '/login',
   // (/secret requires auth)
 ]

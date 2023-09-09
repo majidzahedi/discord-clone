@@ -41,6 +41,7 @@ export default function UserNav() {
   const switchLocale = (value: string) => {
     router.push(pathname, { locale: value })
   }
+  const dir = useDir()
 
   if (!session) {
     return (
@@ -51,7 +52,7 @@ export default function UserNav() {
   }
 
   return (
-    <DropdownMenu dir={useDir()}>
+    <DropdownMenu dir={dir}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
@@ -98,8 +99,8 @@ export default function UserNav() {
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
                 <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
-                  {themes.map((theme) => (
-                    <DropdownMenuRadioItem value={theme.value}>
+                  {themes.map((theme, index) => (
+                    <DropdownMenuRadioItem key={index} value={theme.value}>
                       {t(theme.label)}
                     </DropdownMenuRadioItem>
                   ))}
@@ -117,8 +118,8 @@ export default function UserNav() {
                   value={locale}
                   onValueChange={switchLocale}
                 >
-                  {languages.map((language) => (
-                    <DropdownMenuRadioItem value={language.value}>
+                  {languages.map((language, index) => (
+                    <DropdownMenuRadioItem key={index} value={language.value}>
                       {t(language.label)}
                     </DropdownMenuRadioItem>
                   ))}

@@ -1,10 +1,13 @@
 'use client'
 
+import { Direction } from '@radix-ui/react-dropdown-menu'
 import { useLocale } from 'next-intl'
 
-function useDir() {
+function useDir(): Direction {
   const locale = useLocale()
-  return locale === 'fa' ? 'rtl' : 'ltr' || 'ltr'
+  const dir = locale === 'fa' ? 'rtl' : 'ltr'
+
+  return dir
 }
 
 export default useDir

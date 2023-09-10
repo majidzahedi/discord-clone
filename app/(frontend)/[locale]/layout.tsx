@@ -3,11 +3,11 @@ import { notFound } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
 import '@/styles/globals.css'
-import { Rubik, Noto_Sans_Arabic } from 'next/font/google'
+import { Rubik, Noto_Sans_Arabic, Vazirmatn } from 'next/font/google'
 import { getTranslator } from 'next-intl/server'
 import Provider from '@/components/providers/session-provider'
-import Sidebar from '@/components/sidebar'
 import { ThemeProvider } from '@/components/providers/theme-provider'
+import ModalProvider from '@/components/providers/modal-provider'
 
 interface MetadataRootLayout {
   params: {
@@ -23,7 +23,7 @@ interface LocaleLayoutProps {
 }
 
 const rubic = Rubik({ subsets: ['latin'] })
-const noto = Noto_Sans_Arabic({ subsets: ['arabic'] })
+const noto = Vazirmatn({ subsets: ['arabic'] })
 
 export async function generateMetadata({
   params: { locale },
@@ -57,10 +57,8 @@ export default async function RootLayout({
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Provider>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-              <main className="relative flex h-full flex-1">
-                <Sidebar />
-                {children}
-              </main>
+              <ModalProvider />
+              {children}
             </ThemeProvider>
           </Provider>
         </NextIntlClientProvider>

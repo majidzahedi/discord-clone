@@ -17,6 +17,15 @@
       }
     }
   },
+  "Modals": {
+    "InitialModal": {
+      "title": "تنظیمات سرور",
+      "description": "یه عکس و اسم برای سرور جدیدت انتخاب کن. میتونی بعدا اونو تغییر بدی",
+      "serverName": "نام سرور",
+      "namePlaceholder": "جان ویک",
+      "create": "ساخت"
+    }
+  },
   "Pages": {
     "main": {
       "meta": {

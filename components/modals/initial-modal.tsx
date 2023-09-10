@@ -20,7 +20,7 @@ import { Input } from '@/components/ui/input'
 import { useTranslations } from 'next-intl'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form'
 import { Button } from '../ui/button'
-import useUploader from '@/hooks/use-upload'
+import DropZoneUploader from '@/components/drop-zone'
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -48,12 +48,13 @@ export const InitialModal = () => {
   })
 
   const isLoading = form.formState.isSubmitting
+  console.log(form.formState.errors)
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.post('/api/servers', values)
 
-      form.reset()
       router.refresh()
+      form.reset()
       window.location.reload()
     } catch (error) {
       console.log(error)
@@ -85,10 +86,8 @@ export const InitialModal = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input
-                          type="file"
-                          value={field.value}
-                          onChange={field.onChange}
+                        <DropZoneUploader
+                          setValue={(location:string)=>form.setValue('imageUrl', location)}
                         />
                       </FormControl>
                     </FormItem>

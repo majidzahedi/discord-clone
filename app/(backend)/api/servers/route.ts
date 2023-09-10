@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// TODO: complete createServer function
 const createServer = async (req: NextRequest) => {
-  const body = await req.json()
-
-  console.log(body)
-  return new NextResponse('hello')
+  try {
+    const body = await req.json() 
+    return new NextResponse(body)
+  } catch (error) {
+    return new NextResponse(`CREATE_SERVER: ${error} `, { status: 500 })
+  }
 }
 
 export { createServer as POST }

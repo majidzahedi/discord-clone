@@ -3,6 +3,7 @@ import { withAuth } from 'next-auth/middleware'
 import createIntlMiddleware from 'next-intl/middleware'
 
 const locales = ['fa', 'en']
+// BUG: route '/' is not protected ???
 const publicPages = [
   '/login',
   // (/secret requires auth)

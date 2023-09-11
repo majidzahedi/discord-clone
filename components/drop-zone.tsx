@@ -1,50 +1,106 @@
-import React, { useEffect, useState } from 'react'
-import { Input } from '@/components/ui/input'
-import { useDropzone } from 'react-dropzone'
-import { Upload } from 'lucide-react'
-import useUploader from '@/hooks/use-upload'
+import React, { useCallback, useRef, useState } from 'react'
 
-interface UploaderProps {
-  setValue:any
+import { useDropzone } from 'react-dropzone'
+import { useFileUploader } from '@/hooks/use-file-uploader' // Adjust the import path as needed
+import Image from 'next/image'
+import { AvatarIcon } from '@radix-ui/react-icons'
+import { X } from 'lucide-react'
+import { Button } from './ui/button'
+
+interface CustomFileUploaderProps {
+  acceptedTypes: 'image' | 'video' | 'audio'
 }
 
-// WARN: refactor needed obviously
-// TODO: make it a headless component
-function DropZoneUploader({setValue}: UploaderProps) {
-  const [uploading, setIsUploading] = useState(false)
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    disabled: uploading,
-  })
-
-  const { setFile } = useUploader({
-    onStart: () => setIsUploading(true),
-    onComplete: (data) => {
-      const location = data?.data?.location
-      setValue(location)
-      console.log(location)
-      setIsUploading(false)
+const DropZone: React.FC<CustomFileUploaderProps> = ({ acceptedTypes }) => {
+  const [resultUrl, setResultUrl] = useState<string | undefined>()
+  const { uploading, error, startUpload } = useFileUploader({
+    // Configure your uploader options here
+    chunkSize: 1024 * 1024 * 5, // 5MB chunks
+    threadsQuantity: 5,
+    metadata: {},
+    onProgress: (progress) => {
+      // Handle progress updates here
+      console.log('Upload Progress:', progress)
     },
-    onError: (e) => console.log('UPLOAD_ERROR', e),
+    onError: (err) => {
+      // Handle errors here
+      console.error('Upload Error:', err)
+    },
+    onCompleted: (response) => {
+      // Handle upload completion here
+      console.log('Upload Completed:', response)
+    },
+    onInitialize: (fileInfo) => {
+      // Handle initialization here
+      console.log('Upload Initialized:', fileInfo)
+    },
   })
 
-  useEffect(() => {
-    if (acceptedFiles.length > 0) {
-      setFile(acceptedFiles[0])
-    }
-  }, [acceptedFiles])
+  const onDropAccepted = useCallback(
+    (acceptedFiles: File[]) => {
+      if (acceptedFiles.length > 0) {
+        // Only allow one file to be uploaded at a time
+        const fileToUpload = acceptedFiles[0]
+        setResultUrl(URL.createObjectURL(fileToUpload))
+        startUpload(fileToUpload)
+      }
+    },
+    [startUpload]
+  )
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDropAccepted,
+    accept:
+      acceptedTypes === 'image'
+        ? { 'image/*': [] }
+        : acceptedTypes === 'video'
+        ? { 'video/*': [] }
+        : { 'audio/*': [] },
+    maxFiles: 1, // Allow only one file to be uploaded at a time
+  })
 
   return (
-    <section className="border border-dashed">
+    <div className="flex flex-col items-center space-y-2">
+      <div className="relative h-32 w-32 rounded-full text-center">
+        {resultUrl && (
+          <Button
+            className="absolute right-2 top-2 h-5 w-5 rounded-full"
+            size="icon"
+            variant="destructive"
+          >
+            <X className="" />
+          </Button>
+        )}
+        {resultUrl ? (
+          <Image
+            src={resultUrl}
+            alt=""
+            width={128}
+            height={128}
+            className="h-full w-full rounded-full object-cover"
+          />
+        ) : (
+          <AvatarIcon className="h-full w-full" />
+        )}
+      </div>
       <div
         {...getRootProps()}
-        className="disable:bg-white flex flex-col items-center space-y-5 px-6 py-8"
+        className={`border-2 border-dashed p-4 ${
+          uploading ? 'bg-gray-100' : 'cursor-pointer hover:bg-gray-100'
+        }`}
       >
-        <Input {...getInputProps()} />
-        <Upload className="h-10 w-10" />
-        <p>Drag'n Drop something in here</p>
+        <input {...getInputProps()} />
+        {uploading ? (
+          <p>Uploading... </p>
+        ) : (
+          <p>
+            Drag and drop a {acceptedTypes} file here, or click to select one
+          </p>
+        )}
       </div>
-    </section>
+      {error && <p className="text-red-500">{error.message}</p>}
+    </div>
   )
 }
 
-export default DropZoneUploader
+export default DropZone

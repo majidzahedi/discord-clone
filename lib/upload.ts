@@ -1,20 +1,75 @@
-import axios from 'axios'
+import axios, { AxiosResponse, AxiosStatic } from 'axios'
 
-// initializing axios
 const api = axios.create({
   // baseURL: import.meta.env.VITE_API_URL,
   baseURL: 'http://localhost:3100',
 })
 
-// TODO: refactor to support ts
-// original source: https://github.com/pilovm/multithreaded-uploader/blob/master/frontend/uploader.js
+interface UploadFinishReturnType {
+  location: string
+}
+
+interface UploadStartBodyType {
+  ext: string
+  path: string
+  mime: string
+  size: number
+  metadata: any // Adjust the type as needed
+  parts: number
+}
+
+interface UploadStartReturnType {
+  fileId: string
+  fileKey: string
+  parts: Array<{ PartNumber: number; signedUrl: string }>
+}
+
+interface UploadPart {
+  PartNumber: number
+  ETag: string
+}
+
+export interface ProgressInfo {
+  sent: number
+  total: number
+  percentage: number
+}
+
+interface UploaderOptions {
+  chunkSize?: number
+  threadsQuantity?: number
+  file: File
+  metadata: any // Adjust the type as needed
+  onProgress: (progress: ProgressInfo) => void
+  onError: (error: Error) => void
+  onCompleted: (response: AxiosResponse) => void
+  onInitialize: (file: any) => void
+}
+
 export class Uploader {
-  constructor(options) {
-    // this must be bigger than or equal to 5MB,
-    // otherwise AWS will respond with:
-    // "Your proposed upload is smaller than the minimum allowed size"
+  private chunkSize: number
+  private threadsQuantity: number
+  private file: File
+  private metadata: any
+  private aborted: boolean
+  private uploadedSize: number
+  private progressCache: Record<number, number>
+  private activeConnections: Record<number, XMLHttpRequest>
+  private parts: Array<{ PartNumber: number; signedUrl: string }>
+  private uploadedParts: UploadPart[]
+  private fileId: string | null
+  private fileKey: string | null
+  private mime: string
+  private size: number
+  private path: string = ''
+  private ext: string
+  private onProgressFn: (progress: ProgressInfo) => void
+  private onErrorFn: (error: Error) => void
+  private onCompletedFn: (response: AxiosResponse) => void
+  private onInitializeFn: (file: any) => void
+
+  constructor(options: UploaderOptions) {
     this.chunkSize = options.chunkSize || 1024 * 1024 * 5
-    // number of parallel uploads
     this.threadsQuantity = Math.min(options.threadsQuantity || 5, 15)
     this.file = options.file
     this.metadata = options.metadata
@@ -28,23 +83,22 @@ export class Uploader {
     this.fileKey = null
     this.mime = options.file.type
     this.size = options.file.size
-    this.path = ''
-    this.ext = options.file.name.split('.').pop()
-    this.onProgressFn = () => {}
-    this.onErrorFn = () => {}
-    this.onCompletedFn = () => {}
-    this.onInitializeFn = () => {}
+    this.ext = options.file.name.split('.').pop() || ''
+    this.onProgressFn = options.onProgress
+    this.onErrorFn = options.onError
+    this.onCompletedFn = options.onCompleted
+    this.onInitializeFn = options.onInitialize
   }
 
-  start() {
+  start(): void {
     this.initialize()
   }
 
-  async initialize() {
+  async initialize(): Promise<void> {
     try {
-      const numberOfParts = Math.ceil(this.file.size / this.chunkSize)
+      const numberOfParts = Math.ceil(this.size / this.chunkSize)
 
-      const AWSMultipartFileDataInput = {
+      const AWSMultipartFileDataInput: UploadStartBodyType = {
         ext: this.ext,
         path: this.path,
         mime: this.mime,
@@ -53,12 +107,13 @@ export class Uploader {
         parts: numberOfParts,
       }
 
-      const urlsResponse = await api.request({
+      const urlsResponse = await api.request<UploadStartReturnType>({
         url: '/upload/start',
         method: 'POST',
         data: AWSMultipartFileDataInput,
       })
-      this.onInitializeFn(urlsResponse.data?.file)
+
+      this.onInitializeFn(urlsResponse.data)
 
       this.fileId = urlsResponse.data.fileId
       this.fileKey = urlsResponse.data.fileKey
@@ -68,12 +123,12 @@ export class Uploader {
       this.parts.push(...newParts)
 
       this.sendNext()
-    } catch (error) {
+    } catch (error: any) {
       await this.complete(error)
     }
   }
 
-  sendNext() {
+  sendNext(): void {
     const activeConnections = Object.keys(this.activeConnections).length
 
     if (activeConnections >= this.threadsQuantity) {
@@ -108,7 +163,7 @@ export class Uploader {
     }
   }
 
-  async complete(error) {
+  async complete(error?: Error): Promise<void> {
     if (error && !this.aborted) {
       this.onErrorFn(error)
       return
@@ -120,33 +175,42 @@ export class Uploader {
     }
 
     try {
-      const res = await this.sendCompleteRequest()
-      // console.log(res?.data)
+      const res: any = await this.sendCompleteRequest()
       this.onCompletedFn(res)
-    } catch (error) {
+    } catch (error: any) {
       this.onErrorFn(error)
     }
   }
 
-  async sendCompleteRequest() {
-    if (this.fileId && this.fileKey) {
-      const videoFinalizationMultiPartInput = {
-        fileId: this.fileId,
-        fileKey: this.fileKey,
-        parts: this.uploadedParts,
-      }
+  async sendCompleteRequest(): Promise<string | undefined> {
+    try {
+      if (this.fileId && this.fileKey) {
+        const finalizeMultipartInput = {
+          fileId: this.fileId,
+          fileKey: this.fileKey,
+          parts: this.uploadedParts,
+        }
 
-      const url = await api.request({
-        url: '/upload/finish',
-        method: 'POST',
-        data: videoFinalizationMultiPartInput,
-      })
-      return url
+        const response = await api.request({
+          url: '/upload/finish',
+          method: 'POST',
+          data: finalizeMultipartInput,
+        })
+
+        const responseData: UploadFinishReturnType = response.data
+        return responseData.location
+      }
+    } catch (error: any) {
+      await this.complete(error)
     }
   }
 
-  sendChunk(chunk, part, sendChunkStarted) {
-    return new Promise((resolve, reject) => {
+  sendChunk(
+    chunk: Blob,
+    part: { PartNumber: number; signedUrl: string },
+    sendChunkStarted: () => void
+  ): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
       this.upload(chunk, part, sendChunkStarted)
         .then((status) => {
           if (status !== 200) {
@@ -161,14 +225,14 @@ export class Uploader {
     })
   }
 
-  handleProgress(part, event) {
+  handleProgress(part: number, event: ProgressEvent): void {
     if (this.file) {
       if (
         event.type === 'progress' ||
         event.type === 'error' ||
         event.type === 'abort'
       ) {
-        this.progressCache[part] = event.loaded
+        this.progressCache[part] = event.loaded || 0
       }
 
       if (event.type === 'uploaded') {
@@ -180,10 +244,8 @@ export class Uploader {
         .map(Number)
         .reduce((memo, id) => (memo += this.progressCache[id]), 0)
 
-      const sent = Math.min(this.uploadedSize + inProgress, this.file.size)
-
-      const total = this.file.size
-
+      const sent = Math.min(this.uploadedSize + inProgress, this.size)
+      const total = this.size
       const percentage = Math.round((sent / total) * 100)
 
       this.onProgressFn({
@@ -194,9 +256,12 @@ export class Uploader {
     }
   }
 
-  upload(file, part, sendChunkStarted) {
-    // uploading each part with its pre-signed URL
-    return new Promise((resolve, reject) => {
+  upload(
+    file: Blob,
+    part: { PartNumber: number; signedUrl: string },
+    sendChunkStarted: () => void
+  ): Promise<number> {
+    return new Promise<number>((resolve, reject) => {
       if (this.fileId && this.fileKey) {
         const xhr = (this.activeConnections[part.PartNumber - 1] =
           new XMLHttpRequest())
@@ -221,7 +286,7 @@ export class Uploader {
             const ETag = xhr.getResponseHeader('ETag')
 
             if (ETag) {
-              const uploadedPart = {
+              const uploadedPart: UploadPart = {
                 PartNumber: part.PartNumber,
                 ETag: ETag.replaceAll('"', ''),
               }
@@ -249,27 +314,27 @@ export class Uploader {
     })
   }
 
-  onProgress(onProgress) {
+  onProgress(onProgress: (progress: ProgressInfo) => void): Uploader {
     this.onProgressFn = onProgress
     return this
   }
 
-  onError(onError) {
+  onError(onError: (error: Error) => void): Uploader {
     this.onErrorFn = onError
     return this
   }
 
-  onCompleted(onCompleted) {
+  onCompleted(onCompleted: (response: AxiosResponse) => void): Uploader {
     this.onCompletedFn = onCompleted
     return this
   }
 
-  onInitialize(onInitialize) {
+  onInitialize(onInitialize: (file: any) => void): Uploader {
     this.onInitializeFn = onInitialize
     return this
   }
 
-  abort() {
+  abort(): void {
     Object.keys(this.activeConnections)
       .map(Number)
       .forEach((id) => {

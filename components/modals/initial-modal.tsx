@@ -86,9 +86,7 @@ export const InitialModal = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <DropZoneUploader
-                          setValue={(location:string)=>form.setValue('imageUrl', location)}
-                        />
+                        <DropZoneUploader acceptedTypes="image" />
                       </FormControl>
                     </FormItem>
                   )}

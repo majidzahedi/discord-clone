@@ -29,6 +29,7 @@ const formSchema = z.object({
   imageUrl: z.string().min(1, { message: 'msgImageUrlError' }),
 })
 
+// BUG: UI is not showing any message about upload process. 
 export const InitialModal = () => {
   const [isMounted, setIsMounted] = useState(false)
 
@@ -86,7 +87,7 @@ export const InitialModal = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <DropZoneUploader acceptedTypes="image" />
+                        <DropZoneUploader acceptedTypes="image" completed={value=>field.onChange(value)} />
                       </FormControl>
                     </FormItem>
                   )}

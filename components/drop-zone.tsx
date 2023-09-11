@@ -9,9 +9,11 @@ import { Button } from './ui/button'
 
 interface CustomFileUploaderProps {
   acceptedTypes: 'image' | 'video' | 'audio'
+  completed: (response:string)=>void
 }
 
-const DropZone: React.FC<CustomFileUploaderProps> = ({ acceptedTypes }) => {
+// TODO: progress is not implemented in UI. 
+const DropZone: React.FC<CustomFileUploaderProps> = ({ acceptedTypes, completed }) => {
   const [resultUrl, setResultUrl] = useState<string | undefined>()
   const { uploading, error, startUpload } = useFileUploader({
     // Configure your uploader options here
@@ -28,6 +30,7 @@ const DropZone: React.FC<CustomFileUploaderProps> = ({ acceptedTypes }) => {
     },
     onCompleted: (response) => {
       // Handle upload completion here
+      completed(response)
       console.log('Upload Completed:', response)
     },
     onInitialize: (fileInfo) => {

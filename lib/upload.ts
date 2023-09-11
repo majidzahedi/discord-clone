@@ -1,8 +1,8 @@
-import axios, { AxiosResponse, AxiosStatic } from 'axios'
+// TODO:  make it a hook maybe??
+import axios, { AxiosResponse } from 'axios'
 
 const api = axios.create({
-  // baseURL: import.meta.env.VITE_API_URL,
-  baseURL: 'http://localhost:3100',
+  baseURL: process.env.NEXT_PUBLIC_UPLOAD_SERVER
 })
 
 interface UploadFinishReturnType {

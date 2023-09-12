@@ -5,7 +5,13 @@ import { cn } from '@/lib/utils'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
 
-function NavigationItem({ id, name, imageUrl }) {
+interface NavigationItemProps{
+  id: string
+  name: string
+  imageUrl: string
+}
+
+function NavigationItem({ id, name, imageUrl }:NavigationItemProps) {
   const params = useParams()
 
   return (
@@ -28,7 +34,7 @@ function NavigationItem({ id, name, imageUrl }) {
             <Image
               fill
               className="aspect-square object-cover"
-              src={`https://${imageUrl}`}
+              src={`${imageUrl}`}
               alt="channel"
             />
           </div>

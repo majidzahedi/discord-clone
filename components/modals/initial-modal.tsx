@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form'
 import { useState, useEffect } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-
 import {
   Dialog,
   DialogContent,
@@ -21,6 +20,8 @@ import { useTranslations } from 'next-intl'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form'
 import { Button } from '../ui/button'
 import DropZoneUploader from '@/components/drop-zone'
+import Image from 'next/image'
+import { X } from 'lucide-react'
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -86,10 +87,27 @@ export const InitialModal = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <DropZoneUploader
-                          acceptedTypes="image"
-                          completed={(value) => field.onChange(value)}
-                        />
+                        {field.value ? (
+                          <div className="relative h-32 w-32 rounded-full ">
+                            <button
+                              onClick={() => field.onChange('')}
+                              className="absolute right-0 top-0 z-50 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground"
+                            >
+                              <X className="h-full w-full" />
+                            </button>
+                            <Image
+                              fill
+                              className="h-32 w-32 rounded-full"
+                              src={field.value}
+                              alt="server"
+                            />
+                          </div>
+                        ) : (
+                          <DropZoneUploader
+                            acceptedTypes="image"
+                            completed={(value) => field.onChange(value)}
+                          />
+                        )}
                       </FormControl>
                     </FormItem>
                   )}

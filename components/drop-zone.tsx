@@ -1,20 +1,25 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback,  useState } from 'react'
 
 import { useDropzone } from 'react-dropzone'
 import { useFileUploader } from '@/hooks/use-file-uploader' // Adjust the import path as needed
-import Image from 'next/image'
-import { AvatarIcon } from '@radix-ui/react-icons'
-import { X } from 'lucide-react'
-import { Button } from './ui/button'
+import { UploadCloud, X } from 'lucide-react'
+import { humanReadableSize } from '@/lib/human-readable-size'
+import { Progress } from './ui/progress'
 
 interface CustomFileUploaderProps {
   acceptedTypes: 'image' | 'video' | 'audio'
-  completed: (response:string)=>void
+  completed: (response: string) => void
+  maxSize?: number | undefined
 }
 
-// TODO: progress is not implemented in UI. 
-const DropZone: React.FC<CustomFileUploaderProps> = ({ acceptedTypes, completed }) => {
+// TODO: progress is not implemented in UI.
+const DropZone: React.FC<CustomFileUploaderProps> = ({
+  acceptedTypes,
+  completed,
+  maxSize=undefined,
+}) => {
   const [resultUrl, setResultUrl] = useState<string | undefined>()
+  const [percentage, setPercentage] = useState(0)
   const { uploading, error, startUpload } = useFileUploader({
     // Configure your uploader options here
     chunkSize: 1024 * 1024 * 5, // 5MB chunks
@@ -22,7 +27,7 @@ const DropZone: React.FC<CustomFileUploaderProps> = ({ acceptedTypes, completed 
     metadata: {},
     onProgress: (progress) => {
       // Handle progress updates here
-      console.log('Upload Progress:', progress)
+      console.log('Upload Progress:', setPercentage(progress.percentage))
     },
     onError: (err) => {
       // Handle errors here
@@ -53,6 +58,7 @@ const DropZone: React.FC<CustomFileUploaderProps> = ({ acceptedTypes, completed 
 
   const { getRootProps, getInputProps } = useDropzone({
     onDropAccepted,
+    maxSize: maxSize,
     accept:
       acceptedTypes === 'image'
         ? { 'image/*': [] }
@@ -60,46 +66,33 @@ const DropZone: React.FC<CustomFileUploaderProps> = ({ acceptedTypes, completed 
         ? { 'video/*': [] }
         : { 'audio/*': [] },
     maxFiles: 1, // Allow only one file to be uploaded at a time
+    disabled: uploading,
   })
 
   return (
     <div className="flex flex-col items-center space-y-2">
-      <div className="relative h-32 w-32 rounded-full text-center">
-        {resultUrl && (
-          <Button
-            className="absolute right-2 top-2 h-5 w-5 rounded-full"
-            size="icon"
-            variant="destructive"
-          >
-            <X className="" />
-          </Button>
-        )}
-        {resultUrl ? (
-          <Image
-            src={resultUrl}
-            alt=""
-            width={128}
-            height={128}
-            className="h-full w-full rounded-full object-cover"
-          />
-        ) : (
-          <AvatarIcon className="h-full w-full" />
-        )}
-      </div>
       <div
-        {...getRootProps()}
-        className={`border-2 border-dashed p-4 ${
-          uploading ? 'bg-gray-100' : 'cursor-pointer hover:bg-gray-100'
-        }`}
+        {...getRootProps({
+          className:
+            'bg-accent rounded border-black dark:border-white border border-dashed p-3 disabled:bg-accent-foreground ',
+        })}
       >
         <input {...getInputProps()} />
-        {uploading ? (
-          <p>Uploading... </p>
-        ) : (
-          <p>
-            Drag and drop a {acceptedTypes} file here, or click to select one
-          </p>
-        )}
+        <div className="flex flex-col items-center">
+          <UploadCloud className="h-24 w-24 " />
+          <p className="font-bold">Choose file or drag and drop</p>
+          <div className="inline-flex">
+            <span className="text-sm uppercase ltr:mr-5 rtl:ml-5">
+              {acceptedTypes}
+            </span>
+            {maxSize && (
+              <span className="text-sm uppercase">
+                {humanReadableSize(maxSize)}
+              </span>
+            )}
+          </div>
+        </div>
+        {uploading && <Progress className="h-8 w-12 rounded-md" value={percentage} />}
       </div>
       {error && <p className="text-red-500">{error.message}</p>}
     </div>

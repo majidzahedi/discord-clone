@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Profile {
-  id       String @id @default(uuid())
+  id       String @id @default(cuid())
   userId   String @unique
   name     String
   imageUrl String @db.Text
@@ -26,7 +26,7 @@ model Profile {
 }
 
 model Server {
-  id         String @id @default(uuid())
+  id         String @id @default(cuid())
   name       String
   imageUrl   String @db.Text
   inviteCode String @unique
@@ -50,7 +50,7 @@ enum MemberRole {
 }
 
 model Member {
-  id   String     @id @default(uuid())
+  id   String     @id @default(cuid())
   role MemberRole @default(GUEST)
 
   profileId String
@@ -79,7 +79,7 @@ enum ChannelType {
 }
 
 model Channel {
-  id   String      @id @default(uuid())
+  id   String      @id @default(cuid())
   name String
   type ChannelType @default(TEXT)
 
@@ -99,7 +99,7 @@ model Channel {
 }
 
 model Message {
-  id      String @id @default(uuid())
+  id      String @id @default(cuid())
   content String @db.Text
 
   fileUrl String? @db.Text
@@ -120,7 +120,7 @@ model Message {
 }
 
 model Conversation {
-  id String @id @default(uuid())
+  id String @id @default(cuid())
 
   memberOneId String
   memberOne   Member @relation("MemberOne", fields: [memberOneId], references: [id], onDelete: Cascade)
@@ -135,7 +135,7 @@ model Conversation {
 }
 
 model DirectMessage {
-  id      String  @id @default(uuid())
+  id      String  @id @default(cuid())
   content String  @db.Text
   fileUrl String? @db.Text
 

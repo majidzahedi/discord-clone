@@ -5,6 +5,7 @@ import { getProfileOrCreate } from '@/lib/get-profile-or-create'
 
 // TODO: Refactoring and separation of concerns
 export default async function Page() {
+  // TODO: move create profile to next-auth checkins.
   const profile = await getProfileOrCreate()
 
   const profileServers = await db.server.findFirst({
@@ -16,7 +17,6 @@ export default async function Page() {
     },
   })
 
-  console.log(profileServers)
   if (profileServers) {
     return redirect(`/${profileServers.id}`)
   }

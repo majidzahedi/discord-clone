@@ -18,7 +18,7 @@ export default async function Page() {
   })
 
   if (profileServers) {
-    return redirect(`/${profileServers.id}`)
+    return redirect(`/servers/${profileServers.id}`)
   }
 
   return <InitialModal />

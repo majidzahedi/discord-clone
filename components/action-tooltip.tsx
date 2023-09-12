@@ -20,7 +20,7 @@ function ActionTooltip({ children, label, side, align }: ActionTooltipProps) {
       <Tooltip delayDuration={50}>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent side={side} align={align}>
-          <p>{label.toLowerCase()}</p>
+          <p className='font-semibold text-sm capitalize'>{label.toLowerCase()}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

@@ -57,9 +57,9 @@ export default function UserNav() {
         <Button
           variant="ghost"
           size="icon"
-          className={cn('relative ', 'h-10 w-10 rounded-full')}
+          className={cn('relative ', 'h-[48px] w-[48px] rounded-full')}
         >
-          <Avatar className="h-10 w-10">
+          <Avatar className="h-[48px] w-[48px]">
             <AvatarImage src={session?.user?.image ?? ''} alt="" />
             <AvatarFallback>
               <p className="font-bold capitalize">

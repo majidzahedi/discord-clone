@@ -24,6 +24,9 @@
       "serverName": "Server Name",
       "namePlaceholder": "jhon Doe.",
       "create": "Create"
+    },
+    "InviteModal": {
+      "title": "Invite Firend"
     }
   },
   "Pages": {

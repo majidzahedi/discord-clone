@@ -35,7 +35,7 @@ const NavigationSideBar = async () => {
         "
       >
         {servers.map((server) => (
-          <div className="mb-4">
+          <div key={server.id} className="mb-4">
             <NavigationItem
               id={server.id}
               name={server.name}

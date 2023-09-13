@@ -97,8 +97,8 @@ export const InitialModal = () => {
                             </button>
                             <Image
                               fill
-                              className="h-32 w-32 rounded-full"
-                              src={field.value}
+                              className="h-32 w-32 rounded-full object-cover"
+                              src={`https://${field.value}`}
                               alt="server"
                             />
                           </div>

@@ -1,4 +1,4 @@
-import React, { useCallback,  useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
 import { useDropzone } from 'react-dropzone'
 import { useFileUploader } from '@/hooks/use-file-uploader' // Adjust the import path as needed
@@ -16,7 +16,7 @@ interface CustomFileUploaderProps {
 const DropZone: React.FC<CustomFileUploaderProps> = ({
   acceptedTypes,
   completed,
-  maxSize=undefined,
+  maxSize = undefined,
 }) => {
   const [resultUrl, setResultUrl] = useState<string | undefined>()
   const [percentage, setPercentage] = useState(0)
@@ -82,17 +82,21 @@ const DropZone: React.FC<CustomFileUploaderProps> = ({
           <UploadCloud className="h-24 w-24 " />
           <p className="font-bold">Choose file or drag and drop</p>
           <div className="inline-flex">
-            <span className="text-sm uppercase ltr:mr-5 rtl:ml-5">
-              {acceptedTypes}
-            </span>
+            <span className="text-sm uppercase ">{acceptedTypes}</span>
             {maxSize && (
-              <span className="text-sm uppercase">
+              <span className="text-sm uppercase ltr:mr-5 rtl:ml-5">
                 {humanReadableSize(maxSize)}
               </span>
             )}
           </div>
+
+          {uploading && (
+            <Progress
+              className="h-8 w-2/3 self-center  rounded-md"
+              value={percentage}
+            />
+          )}
         </div>
-        {uploading && <Progress className="h-8 w-12 rounded-md" value={percentage} />}
       </div>
       {error && <p className="text-red-500">{error.message}</p>}
     </div>

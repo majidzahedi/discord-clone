@@ -134,7 +134,7 @@ export const InitialModal = () => {
             </div>
             <DialogFooter className=" px-6 py-4">
               <Button variant="default" disabled={isLoading}>
-                {t('create')}
+                {t('save')}
               </Button>
             </DialogFooter>
           </form>

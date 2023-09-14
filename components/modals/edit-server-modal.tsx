@@ -22,6 +22,8 @@ import DropZoneUploader from '@/components/drop-zone'
 import Image from 'next/image'
 import { X } from 'lucide-react'
 import { useModal } from '@/hooks/use-modal-store'
+import { useEffect } from 'react'
+import { isObject } from 'util'
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -31,18 +33,11 @@ const formSchema = z.object({
 })
 
 // BUG: UI is not showing any message about upload process.
-export const CreateServerModal = () => {
-  const { isOpen, onClose, type } = useModal()
+export const EditServerModal = () => {
+  const { isOpen, onClose, type, data } = useModal()
+  const { server } = data
 
-  const isModalOpen = isOpen && type === 'createServer'
-
-  const handleClose = () => {
-    form.reset()
-    onClose()
-  }
-
-  const router = useRouter()
-  const t = useTranslations('Modals.InitialModal')
+  const isModalOpen = isOpen && type === 'editServer'
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -52,21 +47,28 @@ export const CreateServerModal = () => {
     },
   })
 
+  useEffect(() => {
+    form.setValue('name', server?.name)
+    form.setValue('imageUrl', server?.imageUrl)
+  }, [form, server, isOpen])
+
+  const router = useRouter()
+  const t = useTranslations('Modals.InitialModal')
+
   const isLoading = form.formState.isSubmitting
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.post('/api/servers', values)
+      await axios.patch(`/api/servers/${server?.id}`, values)
 
       router.refresh()
-      form.reset()
-      handleClose()
+      onClose()
     } catch (error) {
       console.log(error)
     }
   }
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={handleClose}>
+    <Dialog open={isModalOpen} onOpenChange={() => onClose()}>
       <DialogContent className="overflow-hidden p-0 ">
         <DialogHeader className="px-6 pt-8">
           <DialogTitle className="text-center text-2xl font-bold">

@@ -48,4 +48,29 @@ const editServer = async (req: NextRequest, { params }: editServerParams) => {
   }
 }
 
-export { editServer as PATCH }
+const deleteServer = async (_: any, { params }: editServerParams) => {
+  try {
+    const profile = await currentProfile()
+
+    if (!profile) {
+      return new NextRequest('Unauthorized')
+    }
+
+    if (!params.serverId) {
+      return new NextRequest('ServerId is missing')
+    }
+    await db.server.delete({
+      where: {
+        id: params.serverId,
+        profileId: profile.id,
+      },
+    })
+
+    return new NextResponse('Done')
+  } catch (error) {
+    console.log('[DeleteServer]: ', error)
+    return new NextResponse('Internal Server Error !')
+  }
+}
+
+export { editServer as PATCH, deleteServer as DELETE }

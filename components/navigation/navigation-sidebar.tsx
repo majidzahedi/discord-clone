@@ -6,7 +6,7 @@ import { NavigationAction } from '@/components/navigation/navitagion-action'
 import { Separator } from '@/components/ui/seperator'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { NavigationItem } from './navigation-item'
-import UserNav from '../user-avatar'
+import UserNav from '@/components/user-nav'
 
 const NavigationSideBar = async () => {
   const profile = await currentProfile()

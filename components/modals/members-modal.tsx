@@ -38,7 +38,7 @@ import {
 import { MemberRole } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 
-const roleIconMap = {
+export const roleIconMap = {
   GUEST: null,
   MODERATOR: <ShieldQuestion className="ml-2 h-4 w-4 text-green-500" />,
   ADMIN: <ShieldCheck className="ml-2 h-4 w-4 text-sky-500" />,

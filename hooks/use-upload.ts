@@ -37,6 +37,7 @@ const useUploader = (
         file: file,
       }
 
+      // @ts-ignore
       const uploader = new Uploader(videoUploaderOptions)
 
       setUploader(uploader)

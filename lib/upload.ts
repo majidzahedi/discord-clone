@@ -2,7 +2,7 @@
 import axios, { AxiosResponse } from 'axios'
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_UPLOAD_SERVER
+  baseURL: process.env.NEXT_PUBLIC_UPLOAD_SERVER,
 })
 
 interface UploadFinishReturnType {
@@ -39,7 +39,7 @@ interface UploaderOptions {
   chunkSize?: number
   threadsQuantity?: number
   file: File
-  metadata: any // Adjust the type as needed
+  metadata?: any // Adjust the type as needed
   onProgress: (progress: ProgressInfo) => void
   onError: (error: Error) => void
   onCompleted: (response: AxiosResponse) => void

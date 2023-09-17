@@ -39,13 +39,11 @@ import { useEffect } from 'react'
 const formSchema = z.object({
   name: z
     .string()
-    .min(1, {
-      message: 'msgNameError',
-    })
+    .min(1)
     .refine((name) => name !== 'general', {
       message: "channel name cannot be 'general'",
     }),
-  type: z.nativeEnum(ChannelType),
+  type: z.nativeEnum(ChannelType).default('TEXT'),
 })
 
 // BUG: UI is not showing any message about upload process.
@@ -66,8 +64,8 @@ export const EditChannelModal = () => {
 
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
+    values: {
+      name: channel?.name,
       type: channel?.type,
     },
   })
@@ -87,7 +85,6 @@ export const EditChannelModal = () => {
           serverId: params?.serverId,
         },
       })
-      console.log(url)
       await axios.patch(url, values)
 
       router.refresh()
@@ -106,6 +103,7 @@ export const EditChannelModal = () => {
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
+          {/*// @ts-ignore */}
           <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-8 px-6">
               <FormField

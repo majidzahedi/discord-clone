@@ -19,11 +19,12 @@ export const getProfileOrCreate = async () => {
   if (profile) {
     return profile
   }
+
   const newProfile = await db.profile.create({
     data: {
       email: session.user.email,
-      imageUrl: session.user.image,
-      name: session.user.name,
+      imageUrl: session.user.image || '',
+      name: session.user.name || '',
       userId: cuid(),
     },
   })

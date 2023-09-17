@@ -48,7 +48,9 @@ export const EditServerModal = () => {
   })
 
   useEffect(() => {
+    //@ts-ignore
     form.setValue('name', server?.name)
+    //@ts-ignore
     form.setValue('imageUrl', server?.imageUrl)
   }, [form, server, isOpen])
 

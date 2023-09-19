@@ -32,11 +32,9 @@ export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button className="text-md flex h-12 w-full items-center border-b border-gray-600 px-3 font-semibold transition">
-          {server.name}
-          <ChevronDown className="ml-auto h-5 w-5" />
-        </button>
+      <DropdownMenuTrigger className="text-md flex h-12 w-full items-center border-b border-gray-600 px-3 font-semibold transition">
+        {server.name}
+        <ChevronDown className="ml-auto h-5 w-5" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 space-y-[2px] text-xs font-medium">
         {isModerator && (

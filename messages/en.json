@@ -18,6 +18,48 @@
     }
   },
   "Modals": {
+    "LeaveServer": {
+      "title": "Customize your server",
+      "description": "Give your server a personality with a name and an image. You can always change it later.",
+      "serverName": "Server Name",
+      "namePlaceholder": "jhon Doe.",
+      "save": "Save"
+    },
+    "DeleteServer": {
+      "title": "Customize your server",
+      "description": "Give your server a personality with a name and an image. You can always change it later.",
+      "serverName": "Server Name",
+      "namePlaceholder": "jhon Doe.",
+      "save": "Save"
+    },
+    "CreateChannel": {
+      "title": "Customize your server",
+      "description": "Give your server a personality with a name and an image. You can always change it later.",
+      "serverName": "Server Name",
+      "namePlaceholder": "jhon Doe.",
+      "save": "Save"
+    },
+    "MessageFileModal": {
+      "title": "Customize your server",
+      "description": "Give your server a personality with a name and an image. You can always change it later.",
+      "serverName": "Server Name",
+      "namePlaceholder": "jhon Doe.",
+      "save": "Save"
+    },
+    "DeleteMessage": {
+      "title": "Customize your server",
+      "description": "Give your server a personality with a name and an image. You can always change it later.",
+      "serverName": "Server Name",
+      "namePlaceholder": "jhon Doe.",
+      "save": "Save"
+    },
+    "DeleteChannel": {
+      "title": "Customize your server",
+      "description": "Give your server a personality with a name and an image. You can always change it later.",
+      "serverName": "Server Name",
+      "namePlaceholder": "jhon Doe.",
+      "save": "Save"
+    },
     "InitialModal": {
       "title": "Customize your server",
       "description": "Give your server a personality with a name and an image. You can always change it later.",

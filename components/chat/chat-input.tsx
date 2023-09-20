@@ -71,6 +71,7 @@ function ChatInput({ apiUrl, query, name, type }: ChatInputProps) {
                       <Plus className="text-white" />
                     </button>
                     <Input
+                      autoComplete="off"
                       disabled={isLoading}
                       className="border-0 border-none bg-zinc-200/90 px-14 py-6 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-zinc-700/75 "
                       placeholder={`Message ${

@@ -38,14 +38,14 @@ function ServerChannel({ server, channel, role }: ServerChannelProps) {
       href={`/servers/${server.id}/channel/${channel.id}`}
       className={cn(
         'items-cen group flex w-full gap-x-2 rounded-md p-2',
-        params.channelId === channel.id && 'bg-zinc-700/20 dark:bg-zinc-700'
+        params?.channelId === channel.id && 'bg-zinc-700/20 dark:bg-zinc-700'
       )}
     >
       <Icon className="dark:text-znic-400 h-5 w-5 flex-shrink-0 text-zinc-500" />
       <span
         className={cn(
           'line-clamp-1 text-sm font-semibold text-zinc-500 transition group-hover:text-zinc-600 dark:text-zinc-600 dark:group-hover:text-zinc-300',
-          params.channelId === channel.id &&
+          params?.channelId === channel.id &&
             'dark:group-hover:white text-primary dark:text-zinc-200'
         )}
       >

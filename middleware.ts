@@ -37,6 +37,7 @@ export default function middleware(req: NextRequest) {
   const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname)
 
   if (isPublicPage) {
+    // @ts-ignore
     return intlMiddleware(req)
   } else {
     return (authMiddleware as any)(req)

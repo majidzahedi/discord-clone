@@ -22,10 +22,10 @@ function ServerMember({ member, server }: ServerMemberProps) {
 
   return (
     <Link
-      href={`/servers/${params.serverId}/conversation/${member.id}`}
+      href={`/servers/${params?.serverId}/conversation/${member.id}`}
       className={cn(
         'group mb-1 flex w-full items-center gap-x-2 rounded-md p-2 transition hover:bg-zinc-700/10 dark:bg-zinc-700/50',
-        params.memberId === member.id && 'bg-zinc-700/20 dark:bg-zinc-700'
+        params?.memberId === member.id && 'bg-zinc-700/20 dark:bg-zinc-700'
       )}
     >
       <UserAvatar

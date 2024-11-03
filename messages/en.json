@@ -1,0 +1,89 @@
+{
+  "Components": {
+    "user-avatar": {
+      "login": "Login",
+      "profile": "Profile",
+      "logOut": "Log Out",
+      "themes": {
+        "default": "Themes",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      },
+      "languages": {
+        "default": "Languages",
+        "persian": "Persian",
+        "english": "English"
+      }
+    }
+  },
+  "Modals": {
+    "LeaveServer": {
+      "title": "Customize your server",
+      "description": "Give your server a personality with a name and an image. You can always change it later.",
+      "serverName": "Server Name",
+      "namePlaceholder": "jhon Doe.",
+      "save": "Save"
+    },
+    "DeleteServer": {
+      "title": "Customize your server",
+      "description": "Give your server a personality with a name and an image. You can always change it later.",
+      "serverName": "Server Name",
+      "namePlaceholder": "jhon Doe.",
+      "save": "Save"
+    },
+    "CreateChannel": {
+      "title": "Customize your server",
+      "description": "Give your server a personality with a name and an image. You can always change it later.",
+      "serverName": "Server Name",
+      "namePlaceholder": "jhon Doe.",
+      "save": "Save"
+    },
+    "MessageFileModal": {
+      "title": "Customize your server",
+      "description": "Give your server a personality with a name and an image. You can always change it later.",
+      "serverName": "Server Name",
+      "namePlaceholder": "jhon Doe.",
+      "save": "Save"
+    },
+    "DeleteMessage": {
+      "title": "Customize your server",
+      "description": "Give your server a personality with a name and an image. You can always change it later.",
+      "serverName": "Server Name",
+      "namePlaceholder": "jhon Doe.",
+      "save": "Save"
+    },
+    "DeleteChannel": {
+      "title": "Customize your server",
+      "description": "Give your server a personality with a name and an image. You can always change it later.",
+      "serverName": "Server Name",
+      "namePlaceholder": "jhon Doe.",
+      "save": "Save"
+    },
+    "InitialModal": {
+      "title": "Customize your server",
+      "description": "Give your server a personality with a name and an image. You can always change it later.",
+      "serverName": "Server Name",
+      "namePlaceholder": "jhon Doe.",
+      "save": "Save"
+    },
+    "InviteModal": {
+      "title": "Invite Firend"
+    }
+  },
+  "Pages": {
+    "main": {
+      "meta": {
+        "siteName": "Clone"
+      },
+      "title": "Hello world!",
+      "description": "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."
+    },
+    "login": {
+      "meta": {
+        "siteName": "Login"
+      },
+      "githubLogin": "Login with Github"
+    }
+  }
+}

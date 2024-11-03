@@ -1,0 +1,55 @@
+version: '3.3'
+
+services:
+  traefik:
+    image: 'traefik'
+    container_name: 'traefik'
+    command:
+      #- "--log.level=DEBUG"
+      - '--api.insecure=true'
+      - '--accesslog=true'
+      - '--providers.docker=true'
+      - '--providers.docker.exposedbydefault=false'
+      - '--entrypoints.web.address=:80'
+    ports:
+      - '80:80'
+      - '8080:8080'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.traefik.rule=Host(`t.localhost`)'
+      - 'traefik.http.routers.traefik.service=api@internal'
+      - 'traefik.http.services.api.loadbalancer.server.port=8080'
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+    networks:
+      - default_network
+
+  discordclone:
+    image: 'discord-clone:latest'
+    container_name: 'discord'
+    expose:
+      - 3000
+    environment:
+      - 'TZ=Asia/Tehran'
+      - 'PORT=3000'
+      - 'HOSTNAME=0.0.0.0'
+      - 'NEXTAUTH_SECRET=secret'
+      - 'NEXTAUTH_URL=http://discord.localhost/'
+      - 'GITHUB_ID=781943541e1e257f0cc4'
+      - 'GITHUB_SECRET=358b4eb0e526956fffe4267e4d002308903d2b36'
+      - 'DATABASE_URL=postgres://admin:adminadmin@postgres:5432/discord-clone'
+      - 'NEXT_PUBLIC_UPLOAD_SERVER=http://localhost:3100'
+      - 'LIVEKIT_API_KEY=APIaSDJAi43fkMv'
+      - 'LIVEKIT_API_SECRET=9bjHigQI6vX6npaEqXGezjsbYTfzIZ3ku6zC52Q5j1fB'
+      - 'NEXT_PUBLIC_LIVEKIT_URL=wss://discord-clone-xk0hze92.livekit.cloud'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.pwa.rule=Host(`discord.localhost`)'
+      - 'traefik.http.routers.pwa.service=nextjs'
+      - 'traefik.http.services.nextjs.loadbalancer.server.port=3000'
+    networks:
+      - default_network
+
+networks:
+  default_network:
+    external: true
